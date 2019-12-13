@@ -26,6 +26,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "booking" */ '../views/Patient/Booking.vue')
   },
   {
+    path: '/bookingcreate',
+    name: 'bookingcreate',
+    component: () => import(/* webpackChunkName: "bookingcreate" */ '../views/Patient/BookingCreate.vue')
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import(/* webpackChunkName: "login" */ '../views/Auth/Login.vue')

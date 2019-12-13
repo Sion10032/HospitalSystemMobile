@@ -1,5 +1,5 @@
 <template>
-  <van-tabs class="bookinglist-tab" color="#1989fa" type="card">
+  <van-tabs class="bookinglist-tab" color="#1989fa">
     <van-tab title="当前预约">
       <div class="bookinglist-wrapper">
         <booking-item />
@@ -27,7 +27,4 @@ export default {
 </script>
 
 <style>
-.bookinglist-tab {
-  padding: 10px 0;
-}
 </style>
