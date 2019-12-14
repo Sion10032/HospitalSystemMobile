@@ -1,19 +1,27 @@
 <template>
-  <van-tabs class="bookinglist-tab" color="#1989fa">
-    <van-tab title="当前预约">
-      <div class="bookinglist-wrapper">
-        <booking-item />
-        <booking-item />
-      </div>
-    </van-tab>
-    <van-tab title="历史预约">
-      <div class="bookinglist-wrapper">
-        <booking-item />
-        <booking-item />
-        <booking-item />
-      </div>
-    </van-tab>
-  </van-tabs>
+  <div class="bookling-list-wrapper">
+    <van-nav-bar
+      title="预约信息"
+      left-text="返回"
+      left-arrow
+      @click-left="onClickLeft"
+    />
+    <van-tabs class="bookinglist-tab" color="#1989fa">
+      <van-tab title="当前预约">
+        <div class="bookinglist-wrapper">
+          <booking-item />
+          <booking-item />
+        </div>
+      </van-tab>
+      <van-tab title="历史预约">
+        <div class="bookinglist-wrapper">
+          <booking-item />
+          <booking-item />
+          <booking-item />
+        </div>
+      </van-tab>
+    </van-tabs>
+  </div>
 </template>
 
 <script>
@@ -22,6 +30,11 @@ import BookingItem from './BookingItem.vue'
 export default {
   components: {
     BookingItem
+  },
+  methods: {
+    onClickLeft: function () {
+      this.$router.go(-1)
+    }
   }
 }
 </script>
