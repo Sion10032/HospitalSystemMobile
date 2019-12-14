@@ -15,7 +15,7 @@
       <van-popup v-model="ShowControl.BookingType" position="bottom">
       <van-picker :columns="ValueList.BookingType" @change="OnBookingTypeChange"/>
       </van-popup>
-      <van-cell title="医生" :value="Doctor"
+      <van-cell title="医生" :value="Doctor" v-if="BookingType"
         is-link arrow-direction="down" @click="ShowControlSwitch('Doctor')">
       </van-cell>
       <van-popup v-model="ShowControl.Doctor" position="bottom">
@@ -43,7 +43,7 @@
 export default {
   data: function () {
     return {
-      BookingType: false,
+      BookingType: true,
       Doctor: '医生',
       BookingDate: new Date(),
       BookingTime: '10:00 - 11:00',
@@ -74,7 +74,7 @@ export default {
       this.ShowControl[item] = value !== null ? value : !this.ShowControl[item]
     },
     OnBookingTypeChange: function (picker, value, index) {
-      this.BookingType = value
+      this.BookingType = value === '专家号'
     },
     OnDoctorChange: function () {
     },
