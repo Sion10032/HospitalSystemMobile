@@ -21,7 +21,7 @@
     <div class="divider"></div>
     <div class="login-button-wrapper">
       <van-button style="width: 80px; height: 40px;" type="danger" @click="RegisterClick">注册</van-button>
-      <van-button style="width: 80px; height: 40px;" type="primary">登陆</van-button>
+      <van-button style="width: 80px; height: 40px;" type="primary" @click="LoginClick">登陆</van-button>
     </div>
   </div>
 </template>
@@ -31,6 +31,24 @@ export default {
   methods: {
     RegisterClick: function () {
       this.$router.push('register')
+    },
+    LoginClick: function () {
+      this.$axios({
+        method: 'POST',
+        url: '/auth/',
+        data: {
+          username: this.username,
+          password: this.password
+        }
+      }).then((result) => {
+        if (result.status === 200) {
+          alert('登陆成功')
+          this.$router.push('/me')
+        }
+      }).catch((err) => {
+        console.log(err)
+        alert('登陆失败')
+      })
     }
   }
 }
