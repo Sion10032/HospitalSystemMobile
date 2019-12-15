@@ -12,6 +12,28 @@
   </div>
 </template>
 
+<script>
+export default {
+  created: function () {
+    if (localStorage.getItem('refresh')) {
+      this.$axios({
+        method: 'post',
+        url: '/auth/refresh/',
+        data: {
+          refresh: localStorage.getItem('refresh')
+        }
+      }).then((result) => {
+        localStorage.setItem('access', result.data['access'])
+        this.$axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access')
+      }).catch((err) => {
+        localStorage.clear()
+        console.log(err)
+      })
+    }
+  }
+}
+</script>
+
 <style>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
