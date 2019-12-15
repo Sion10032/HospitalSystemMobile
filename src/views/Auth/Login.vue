@@ -43,6 +43,9 @@ export default {
       }).then((result) => {
         if (result.status === 200) {
           alert('登陆成功')
+
+          localStorage.setItem('access', result.data.access)
+          localStorage.setItem('refresh', 'Bearer ' + result.data.refresh)
           this.$router.push('/me')
         }
       }).catch((err) => {

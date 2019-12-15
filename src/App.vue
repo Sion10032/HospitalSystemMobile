@@ -33,6 +33,6 @@
 }
 .divider {
   height: 10px;
-  width: 100vw;
+  width: 10px;
 }
 </style>
