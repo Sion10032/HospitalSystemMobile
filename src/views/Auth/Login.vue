@@ -45,7 +45,7 @@ export default {
           alert('登陆成功')
 
           localStorage.setItem('access', result.data.access)
-          localStorage.setItem('refresh', 'Bearer ' + result.data.refresh)
+          localStorage.setItem('refresh', result.data.refresh)
           this.$router.push('/me')
         }
       }).catch((err) => {

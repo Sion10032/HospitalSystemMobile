@@ -11,7 +11,7 @@
     </div>
     <van-cell-group>
         <van-cell title="登录" to="login" v-if="!isLogin"/>
-        <van-cell title="退出登录" v-if="isLogin"/>
+        <van-cell title="退出登录" v-if="isLogin" @click="OnLogoutClick"/>
     </van-cell-group>
   </div>
 </template>
@@ -27,6 +27,7 @@ export default {
   },
   created: function () {
     if (localStorage.getItem('access')) {
+      this.isLogin = true
       this.$axios({
         method: 'GET',
         url: '/auth/user/',
@@ -35,13 +36,35 @@ export default {
         }
       }).then((result) => {
         if (result.status === 200) {
-          this.isLogin = true
           this.username = result.data.username
           this.profile = result.data.profile.address
         }
       }).catch((err) => {
         console.log(err)
         alert('获取用户数据失败')
+      })
+    }
+  },
+  methods: {
+    OnLogoutClick: function () {
+      console.log('点击')
+      this.$axios({
+        method: 'GET',
+        url: '/auth/logout/',
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('access')
+        }
+      }).then((result) => {
+        if (result.status === 200) {
+          this.isLogin = false
+          localStorage.clear()
+          this.username = 'username'
+          this.profile = 'profile'
+          this.$router.push('/me')
+        }
+      }).catch((err) => {
+        console.log(err)
+        alert('失败')
       })
     }
   }
