@@ -35,6 +35,23 @@ Vue.config.productionTip = false
 
 axios.defaults.baseURL = 'http://47.106.164.144:8000/api/'
 Vue.prototype.$axios = axios
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access')
+
+if (localStorage.getItem('refresh')) {
+  axios({
+    method: 'post',
+    url: '/auth/refresh/',
+    data: {
+      refresh: localStorage.getItem('refresh')
+    }
+  }).then((result) => {
+    localStorage.setItem('access', result.data['access'])
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access')
+  }).catch((err) => {
+    localStorage.clear()
+    console.log(err)
+  })
+}
 
 new Vue({
   router,

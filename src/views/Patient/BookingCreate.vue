@@ -27,21 +27,28 @@
       <van-popup v-model="ShowControl.Doctor" position="bottom">
         <van-picker :columns="ValueList.Doctor" @change="OnDoctorChange"/>
       </van-popup>
-      <van-cell title="预约日期" :value="BookingDate.toLocaleDateString()"
-        is-link arrow-direction="down" @click="ShowControlSwitch('BookingDate')">
-      </van-cell>
-      <van-popup v-model="ShowControl.BookingDate" position="bottom">
-        <van-datetime-picker type="date"
-          v-model="ShowControl.curDate" :min-date="ShowControl.minDate"
-          @cancel="OnBookingDateCancel" @confirm="OnBookingDateConfirm"/>
-      </van-popup>
-      <van-cell title="预约时间" :value="BookingTime.text"
-        is-link arrow-direction="down" @click="ShowControlSwitch('BookingTime')">
-      </van-cell>
-      <van-popup v-model="ShowControl.BookingTime" position="bottom">
-        <van-picker :columns="ValueList.BookingTime" @change="OnBookingTimeChange"/>
-      </van-popup>
     </van-cell-group>
+    <van-cell v-if="!BookingType.id"
+      title="预约日期" :value="BookingDate && BookingDate.toLocaleDateString().split('/').join('-')"
+      is-link arrow-direction="down" @click="ShowControlSwitch('BookingDate')">
+    </van-cell>
+    <van-cell v-if="BookingType.id"
+      title="预约日期" :value="ExpertBookingDate && ExpertBookingDate.date"
+      is-link arrow-direction="down" @click="ShowControlSwitch('BookingDate')">
+    </van-cell>
+    <van-popup v-model="ShowControl.BookingDate" position="bottom">
+      <van-datetime-picker type="date" v-if="!BookingType.id"
+        v-model="ShowControl.curDate" :min-date="ShowControl.minDate"
+        @cancel="OnBookingDateCancel" @confirm="OnBookingDateConfirm"/>
+      <van-picker v-if="BookingType.id"
+        :columns="ValueList.ExpertBookingDate" @change="OnExpertBookingDateChange"/>
+    </van-popup>
+    <van-cell title="预约时间" :value="BookingTime && BookingTime.text"
+      is-link arrow-direction="down" @click="ShowControlSwitch('BookingTime')">
+    </van-cell>
+    <van-popup v-model="ShowControl.BookingTime" position="bottom">
+      <van-picker :columns="ValueList.BookingTime" @change="OnBookingTimeChange"/>
+    </van-popup>
   </div>
 </template>
 
@@ -53,6 +60,7 @@ export default {
       BookingType: null,
       Doctor: null,
       BookingDate: new Date(),
+      ExpertBookingDate: '',
       BookingTime: '',
       ShowControl: {
         Department: false,
@@ -65,20 +73,77 @@ export default {
       },
       ValueList: {
         Doctors: {},
+        ExpertBookingTimes: {},
         Department: [],
         BookingType: [
           { text: '普通号', id: 0 },
           { text: '专家号', id: 1 }
         ],
         Doctor: [],
+        Date: [],
+        ExpertBookingDate: [],
         BookingTime: []
       }
     }
   },
   created: function () {
     this.GetGroup()
-    this.BookingType = this.ValueList.BookingType[0]
     this.GetBookingTime()
+    this.GetExpertBookingTimes()
+    this.BookingType = this.ValueList.BookingType[0]
+  },
+  watch: {
+    Department: function (newValue, oldValue) {
+      if (this.ValueList.Doctors[newValue.id]) {
+        this.ValueList.Doctor = this.ValueList.Doctors[newValue.id]
+        this.Doctor = this.ValueList.Doctor[0]
+      } else {
+        this.$axios({
+          methods: 'get',
+          url: '/groups/' + newValue.id + '/users'
+        }).then((result) => {
+          this.ValueList.Doctors[newValue.id] = []
+          for (let doc of result.data) {
+            this.ValueList.Doctors[newValue.id].push({
+              text: doc.profile.name,
+              id: doc.id
+            })
+          }
+          this.ValueList.Doctor = this.ValueList.Doctors[newValue.id]
+          if (this.ValueList.Doctor) {
+            this.Doctor = this.ValueList.Doctor[0]
+          }
+        })
+      }
+    },
+    BookingType: function (newValue, oldValue) {
+      if (!newValue.id) {
+        for (let it of this.ValueList.BookingTime) {
+          it.disabled = it.reserved_num >= it.patient_num
+        }
+      }
+    },
+    Doctor: function (newValue, oldValue) {
+      if (newValue) {
+        this.ValueList.ExpertBookingDate = []
+        if (this.ValueList.ExpertBookingTimes[newValue.id]) {
+          for (let it of this.ValueList.ExpertBookingTimes[newValue.id]) {
+            this.ValueList.ExpertBookingDate.push(it)
+          }
+        }
+        this.ExpertBookingDate = (this.ValueList.ExpertBookingDate || [])[0]
+      }
+    },
+    ExpertBookingDate: function (newValue, oldValue) {
+      if (this.BookingType.id) {
+        for (let it of this.ValueList.BookingTime) {
+          it.disabled =
+            (it.reserved_num >= it.patient_num) ||
+            (it.start < newValue.start) ||
+            (it.end > newValue.end)
+        }
+      }
+    }
   },
   methods: {
     GetGroup: function () {
@@ -94,7 +159,7 @@ export default {
               id: dp.id
             })
           }
-          this.SetDepartment(0)
+          this.Department = this.ValueList.Department[0]
         }
       })
     },
@@ -111,9 +176,26 @@ export default {
               start: it.start,
               end: it.end,
               text: it.start + ' - ' + it.end,
+              reserved_num: it.reserved_num,
+              patient_num: it.patient_num,
               disabled: it.reserved_num >= it.patient_num
             })
           }
+        }
+      })
+    },
+    GetExpertBookingTimes: function () {
+      this.$axios({
+        method: 'get',
+        url: '/visits/'
+      }).then((result) => {
+        this.ValueList.ExpertBookingTimes = {}
+        for (let it of result.data) {
+          if (!this.ValueList.ExpertBookingTimes[it.doctor]) {
+            this.ValueList.ExpertBookingTimes[it.doctor] = []
+          }
+          it.text = it.date
+          this.ValueList.ExpertBookingTimes[it.doctor].push(it)
         }
       })
     },
@@ -123,7 +205,7 @@ export default {
     OnRightClick: function () {
       // 先显示预约成功，然后去付款页面
       let data = {
-        date: this.BookingDate.toLocaleDateString().split('/').join('-'),
+        date: this.BookingType.id ? this.ExpertBookingDate.date : this.BookingDate.toLocaleDateString().split('/').join('-'),
         department: this.Department.id,
         time: this.BookingTime.id
       }
@@ -145,30 +227,8 @@ export default {
     ShowControlSwitch: function (item, value = null) {
       this.ShowControl[item] = value !== null ? value : !this.ShowControl[item]
     },
-    SetDepartment: function (index) {
-      this.Department = this.ValueList.Department[index]
-      if (this.ValueList.Doctors[this.Department.id]) {
-        this.ValueList.Doctor = this.ValueList.Doctors[this.Department.id]
-        this.Doctor = this.ValueList.Doctor[0]
-      } else {
-        this.$axios({
-          methods: 'get',
-          url: '/groups/' + this.Department.id + '/users'
-        }).then((result) => {
-          this.ValueList.Doctors[this.Department.id] = []
-          for (let doc of result.data) {
-            this.ValueList.Doctors[this.Department.id].push({
-              text: doc.profile.name,
-              id: doc.id
-            })
-          }
-          this.ValueList.Doctor = this.ValueList.Doctors[this.Department.id]
-          this.Doctor = this.ValueList.Doctor[0]
-        })
-      }
-    },
     OnDepartmentChange: function (picker, value, index) {
-      this.SetDepartment(index)
+      this.Department = this.ValueList.Department[index]
     },
     OnBookingTypeChange: function (picker, value, index) {
       this.BookingType = value
@@ -185,6 +245,9 @@ export default {
     },
     OnBookingTimeChange: function (picker, value, index) {
       this.BookingTime = value
+    },
+    OnExpertBookingDateChange: function (picker, value, index) {
+      this.ExpertBookingDate = value
     }
   }
 }
