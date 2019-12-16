@@ -18,16 +18,8 @@
 
 <script>
 export default {
-  data: function () {
-    return {
-      username: 'username',
-      profile: 'profile',
-      isLogin: false
-    }
-  },
   methods: {
     OnLogoutClick: function () {
-      console.log('点击')
       this.$axios({
         method: 'GET',
         url: '/auth/logout/',
@@ -38,10 +30,11 @@ export default {
         if (result.status === 200) {
           this.isLogin = false
           localStorage.clear()
-          this.username = 'username'
-          this.profile = 'profile'
-          this.$router.push('/me')
+          this.$store.commit('setUser', {
+            id: '请登录', email: '', username: '', profile: {}
+          })
           this.$store.commit('setLogin', false)
+          this.$router.push('/me')
         }
       }).catch((err) => {
         console.log(err)

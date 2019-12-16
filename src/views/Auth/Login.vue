@@ -44,6 +44,7 @@ export default {
         if (result.status === 200) {
           localStorage.setItem('access', result.data.access)
           localStorage.setItem('refresh', result.data.refresh)
+          this.$axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access')
         }
       }).then(() => {
         this.$axios({
