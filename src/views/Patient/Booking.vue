@@ -7,14 +7,14 @@
       @click-left="onClickLeft"
     />
     <van-cell-group>
-      <van-cell title="预约ID" :value="BookingId" label="点击显示二维码" clickable @click="ShowControlSwitch('QRCode')"/>
+      <van-cell title="预约ID" :value="id" label="点击显示二维码" clickable @click="ShowControlSwitch('QRCode')"/>
       <van-popup class="qrcode-img-wrapper" v-model="ShowControl.QRCode" position="bottom">
         <van-image width="320" height="320" fit="cover"
           src="https://img.yzcdn.cn/vant/cat.jpeg"/>
       </van-popup>
-      <van-cell title="预约时间段" :value="BookingTimes.StartTime + ' - ' +  BookingTimes.EndTime"/>
+      <van-cell title="预约时间段" :value="BookingTimes"/>
       <van-cell title="预约科室" :value="Lab" clickable/>
-      <van-cell title="医生" :value="Doctor.Name" clickable/>
+      <van-cell title="医生" v-if="Doctor" :value="Doctor.Name" clickable/>
       <van-cell title="缴费金额" :value="Fee" clickable/>
     </van-cell-group>
   </div>
@@ -23,15 +23,12 @@
 <script>
 export default {
   props: {
-    id: Number
+    id: String
   },
   data: function () {
     return {
       BookingId: 0,
-      BookingTimes: {
-        StartTime: '2019/01/01 10:00',
-        EndTime: '11:00'
-      },
+      BookingTimes: '',
       Lab: '科室',
       Doctor: {
         Id: 0,
@@ -40,7 +37,8 @@ export default {
       Fee: 100,
       ShowControl: {
         QRCode: false
-      }
+      },
+      resp: null
     }
   },
   beforeCreate: function () {
@@ -48,6 +46,23 @@ export default {
       alert('请登录')
       this.$router.push('/login')
     }
+  },
+  created: function () {
+    this.$axios({
+      method: 'get',
+      url: '/reservations/' + this.id + '/'
+    }).then((result) => {
+      this.resp = result.data
+      this.BookingTimes = result.data.date + ' ' + this.$store.getters.getTime(result.data.time)
+      this.Lab = this.$store.getters.getLab(result.data.department)
+      if (result.data.is_expert) {
+        this.Doctor = {
+          Id: result.data.doctor,
+          Name: this.$store.getters.getDoctor(result.data.doctor)
+        }
+      }
+      this.Fee = result.data.is_expert ? 100 : 20
+    })
   },
   methods: {
     onClickLeft: function () {

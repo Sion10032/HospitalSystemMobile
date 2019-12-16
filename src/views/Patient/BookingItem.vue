@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     GoBookingDetail: function () {
-      this.$router.push({ name: 'booking', params: { id: '123' } })
+      this.$router.push({ name: 'booking', params: { id: this.booking.id } })
     }
   }
 }

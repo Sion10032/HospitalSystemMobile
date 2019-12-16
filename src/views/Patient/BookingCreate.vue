@@ -195,7 +195,6 @@ export default {
       if (this.BookingType.id === 1) {
         data['doctor'] = this.Doctor.id
       }
-      console.log(data)
       this.$axios({
         method: 'post',
         url: '/reservations/',

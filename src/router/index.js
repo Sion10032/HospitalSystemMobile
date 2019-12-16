@@ -23,6 +23,7 @@ const routes = [
   {
     path: '/bookings/:id',
     name: 'booking',
+    props: true,
     component: () => import(/* webpackChunkName: "booking" */ '../views/Patient/Booking.vue')
   },
   {

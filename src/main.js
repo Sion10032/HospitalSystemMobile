@@ -72,7 +72,6 @@ axios.all([
     for (let it of result) {
       store.commit('addDoctors', { id: it.config.url.split('/')[5], docs: it.data })
     }
-    console.log(store.state.doctors)
   })
 }).finally(() => {
   store.commit('setCheck', true)
