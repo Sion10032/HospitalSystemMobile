@@ -72,7 +72,6 @@ export default {
         BookingTime: false
       },
       ValueList: {
-        Doctors: {},
         ExpertBookingTimes: {},
         Department: [],
         BookingType: [
@@ -100,27 +99,14 @@ export default {
   },
   watch: {
     Department: function (newValue, oldValue) {
-      if (this.ValueList.Doctors[newValue.id]) {
-        this.ValueList.Doctor = this.ValueList.Doctors[newValue.id]
-        this.Doctor = this.ValueList.Doctor[0]
-      } else {
-        this.$axios({
-          methods: 'get',
-          url: '/groups/' + newValue.id + '/users'
-        }).then((result) => {
-          this.ValueList.Doctors[newValue.id] = []
-          for (let doc of result.data) {
-            this.ValueList.Doctors[newValue.id].push({
-              text: doc.profile.name,
-              id: doc.id
-            })
-          }
-          this.ValueList.Doctor = this.ValueList.Doctors[newValue.id]
-          if (this.ValueList.Doctor) {
-            this.Doctor = this.ValueList.Doctor[0]
-          }
+      this.ValueList.Doctor = []
+      for (let doc of this.$store.state.doctors[newValue.id]) {
+        this.ValueList.Doctor.push({
+          text: doc.profile.name,
+          id: doc.id
         })
       }
+      this.Doctor = this.ValueList.Doctor[0]
     },
     BookingType: function (newValue, oldValue) {
       if (!newValue.id) {
@@ -144,6 +130,7 @@ export default {
       if (this.BookingType.id) {
         for (let it of this.ValueList.BookingTime) {
           it.disabled =
+            !newValue ||
             (it.reserved_num >= it.patient_num) ||
             (it.start < newValue.start) ||
             (it.end > newValue.end)

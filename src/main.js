@@ -4,10 +4,6 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import router from './router'
 import store from './store'
-import VueAuth from '@websanova/vue-auth'
-import VueAuthAuth from '@websanova/vue-auth/drivers/auth/bearer.js'
-import VueAuthHttp from '@websanova/vue-auth/drivers/http/axios.1.x.js'
-import VueAuthRouter from '@websanova/vue-auth/drivers/router/vue-router.2.x.js'
 import {
   Tabbar, TabbarItem, Cell, CellGroup,
   Image, Grid, GridItem, Tab, Tabs,
@@ -23,13 +19,6 @@ Vue.use(Tabbar).use(TabbarItem).use(Cell).use(CellGroup)
   .use(Search).use(Panel).use(Button).use(NavBar)
   .use(Step).use(Steps).use(Lazyload).use(Field).use(Popup)
   .use(Picker).use(DatetimePicker)
-
-Vue.router = router
-Vue.use(VueAuth, {
-  auth: VueAuthAuth,
-  http: VueAuthHttp,
-  router: VueAuthRouter
-})
 
 Vue.config.productionTip = false
 
@@ -71,6 +60,20 @@ axios.all([
       store.commit('setLogin', true)
     })
   }
+}).then(async () => {
+  let urls = []
+  for (let it of store.state.department) {
+    urls.push(axios({
+      method: 'get',
+      url: /groups/ + it.id + '/users/'
+    }))
+  }
+  await axios.all(urls).then((result) => {
+    for (let it of result) {
+      store.commit('addDoctors', { id: it.config.url.split('/')[5], docs: it.data })
+    }
+    console.log(store.state.doctors)
+  })
 }).finally(() => {
   store.commit('setCheck', true)
 })

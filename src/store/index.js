@@ -16,7 +16,39 @@ export default new Vuex.Store({
     isLogin: false,
     isCheck: false,
     department: [],
-    bookingTimes: []
+    bookingTimes: [],
+    doctors: {}
+  },
+  getters: {
+    getLab: function (state) {
+      return function (id) {
+        for (let it of state.department) {
+          if (it.id === id) {
+            return it.name
+          }
+        }
+      }
+    },
+    getTime: function (state) {
+      return function (id) {
+        for (let it of state.bookingTimes) {
+          if (it.id === id) {
+            return it.start + ' - ' + it.end
+          }
+        }
+      }
+    },
+    getDoctor: function (state) {
+      return function (id) {
+        for (let k in state.doctors) {
+          for (let it of state.doctors[k]) {
+            if (it.id === id) {
+              return it.profile.name
+            }
+          }
+        }
+      }
+    }
   },
   mutations: {
     setUser: function (state, user) {
@@ -40,6 +72,9 @@ export default new Vuex.Store({
       for (let it of bookingTimes) {
         state.bookingTimes.push(it)
       }
+    },
+    addDoctors: function (state, doctors) {
+      Vue.set(state.doctors, doctors.id, doctors.docs)
     }
   },
   actions: {

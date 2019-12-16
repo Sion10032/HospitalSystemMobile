@@ -1,16 +1,18 @@
 <template>
   <div class="booking-item-wrapper" @click="GoBookingDetail">
-    <van-cell :title="Lab" :value='Times' :label="Doctor" clickable/>
+    <van-cell :title="booking.lab" :value='booking.date' :label="booking.doctor" clickable/>
   </div>
 </template>
 
 <script>
 export default {
-  data: function () {
-    return {
-      Lab: '科室',
-      Times: '2019/01/01 10:00 - 11:00',
-      Doctor: ''
+  props: {
+    booking: {
+      id: Number,
+      lab: String,
+      date: String,
+      doctor: String,
+      time: String
     }
   },
   methods: {
