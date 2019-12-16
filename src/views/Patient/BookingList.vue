@@ -31,6 +31,12 @@ export default {
   components: {
     BookingItem
   },
+  beforeCreate: function () {
+    if (!this.$store.state.isLogin) {
+      alert('请登录')
+      this.$router.push('/login')
+    }
+  },
   created: function () {
     console.log(this.$store.state)
     this.$axios({

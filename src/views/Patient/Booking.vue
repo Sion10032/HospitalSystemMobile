@@ -43,6 +43,12 @@ export default {
       }
     }
   },
+  beforeCreate: function () {
+    if (!this.$store.state.isLogin) {
+      alert('请登录')
+      this.$router.push('/login')
+    }
+  },
   methods: {
     onClickLeft: function () {
       this.$router.go(-1)
