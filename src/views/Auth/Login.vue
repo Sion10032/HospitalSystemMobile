@@ -42,12 +42,21 @@ export default {
         }
       }).then((result) => {
         if (result.status === 200) {
-          alert('登陆成功')
-
           localStorage.setItem('access', result.data.access)
           localStorage.setItem('refresh', result.data.refresh)
-          this.$router.push('/me')
         }
+      }).then(() => {
+        this.$axios({
+          method: 'get',
+          url: '/auth/user/'
+        }).then((res) => {
+          if (res.status === 200) {
+            this.$store.commit('setUser', res.data)
+            this.$store.commit('setLogin', true)
+            alert('登陆成功')
+            this.$router.push('/me')
+          }
+        })
       }).catch((err) => {
         console.log(err)
         alert('登陆失败')

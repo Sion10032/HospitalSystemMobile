@@ -35,36 +35,45 @@ Vue.config.productionTip = false
 
 axios.defaults.baseURL = 'http://47.106.164.144:8000/api/'
 Vue.prototype.$axios = axios
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access')
 
-if (localStorage.getItem('refresh')) {
-  axios({
-    method: 'post',
-    url: '/auth/refresh/',
-    data: {
-      refresh: localStorage.getItem('refresh')
-    }
-  }).then((result) => {
-    localStorage.setItem('access', result.data['access'])
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access')
-  }).then(() => {
-    axios({
+axios.all([
+  axios({ methods: 'get', url: '/departments/' }),
+  axios({ methods: 'get', url: '/reservation-time/' })
+]).then(axios.spread((department, bookingTimes) => {
+  store.commit('setDepartment', department.data)
+  store.commit('setBookingTimes', bookingTimes.data)
+})).then(async () => {
+  if (localStorage.getItem('refresh')) {
+    await axios({
+      method: 'post',
+      url: '/auth/refresh/',
+      data: {
+        refresh: localStorage.getItem('refresh')
+      }
+    }).then((result) => {
+      // 设置header
+      localStorage.setItem('access', result.data['access'])
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access')
+    }).catch((err) => {
+      store.commit('setLogin', false)
+      localStorage.clear()
+      console.log(err)
+    })
+  }
+}).then(async () => {
+  if (localStorage.getItem('access')) {
+    // 刷新用户信息
+    await axios({
       method: 'get',
       url: '/auth/user/'
     }).then((result) => {
       store.commit('setUser', result.data)
       store.commit('setLogin', true)
     })
-  }).catch((err) => {
-    store.commit('setLogin', false)
-    localStorage.clear()
-    console.log(err)
-  }).finally(() => {
-    store.commit('setCheck', true)
-  })
-} else {
+  }
+}).finally(() => {
   store.commit('setCheck', true)
-}
+})
 
 new Vue({
   router,

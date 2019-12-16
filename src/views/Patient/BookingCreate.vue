@@ -147,42 +147,32 @@ export default {
   },
   methods: {
     GetGroup: function () {
-      this.$axios({
-        methods: 'get',
-        url: '/departments/'
-      }).then((result) => {
-        if (result.status === 200) {
-          this.ValueList.Department = []
-          for (let dp of result.data) {
-            this.ValueList.Department.push({
-              text: dp.name,
-              id: dp.id
-            })
-          }
-          this.Department = this.ValueList.Department[0]
+      if (this.$store.state.isCheck) {
+        this.ValueList.Department = []
+        for (let dp of this.$store.state.department) {
+          this.ValueList.Department.push({
+            text: dp.name,
+            id: dp.id
+          })
         }
-      })
+        this.Department = this.ValueList.Department[0]
+      }
     },
     GetBookingTime: function () {
-      this.$axios({
-        methods: 'get',
-        url: '/reservation-time/'
-      }).then((result) => {
-        if (result.status === 200) {
-          this.ValueList.BookingTime = []
-          for (let it of result.data) {
-            this.ValueList.BookingTime.push({
-              id: it.id,
-              start: it.start,
-              end: it.end,
-              text: it.start + ' - ' + it.end,
-              reserved_num: it.reserved_num,
-              patient_num: it.patient_num,
-              disabled: it.reserved_num >= it.patient_num
-            })
-          }
+      if (this.$store.state.isCheck) {
+        this.ValueList.BookingTime = []
+        for (let it of this.$store.state.bookingTimes) {
+          this.ValueList.BookingTime.push({
+            id: it.id,
+            start: it.start,
+            end: it.end,
+            text: it.start + ' - ' + it.end,
+            reserved_num: it.reserved_num,
+            patient_num: it.patient_num,
+            disabled: it.reserved_num >= it.patient_num
+          })
         }
-      })
+      }
     },
     GetExpertBookingTimes: function () {
       this.$axios({

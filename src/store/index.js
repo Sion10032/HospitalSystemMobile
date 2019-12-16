@@ -14,7 +14,9 @@ export default new Vuex.Store({
       }
     },
     isLogin: false,
-    isCheck: false
+    isCheck: false,
+    department: [],
+    bookingTimes: []
   },
   mutations: {
     setUser: function (state, user) {
@@ -28,6 +30,16 @@ export default new Vuex.Store({
     },
     setCheck: function (state, isCheck) {
       state.isCheck = isCheck
+    },
+    setDepartment: function (state, department) {
+      for (let it of department) {
+        state.department.push(it)
+      }
+    },
+    setBookingTimes: function (state, bookingTimes) {
+      for (let it of bookingTimes) {
+        state.bookingTimes.push(it)
+      }
     }
   },
   actions: {

@@ -14,6 +14,13 @@
 
 <script>
 export default {
+  created: function () {
+  },
+  methods: {
+    GetBookingTimes: function () {
+
+    }
+  }
 }
 </script>
 
