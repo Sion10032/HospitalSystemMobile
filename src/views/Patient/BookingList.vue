@@ -31,6 +31,15 @@ export default {
   components: {
     BookingItem
   },
+  created: function () {
+    console.log(this.$store.state)
+    this.$axios({
+      method: 'get',
+      url: '/users/' + this.$store.state.user.id + '/reservations/'
+    }).then((res) => {
+      console.log(res.data)
+    })
+  },
   methods: {
     onClickLeft: function () {
       this.$router.go(-1)

@@ -47,10 +47,23 @@ if (localStorage.getItem('refresh')) {
   }).then((result) => {
     localStorage.setItem('access', result.data['access'])
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access')
+  }).then(() => {
+    axios({
+      method: 'get',
+      url: '/auth/user/'
+    }).then((result) => {
+      store.commit('setUser', result.data)
+      store.commit('setLogin', true)
+    })
   }).catch((err) => {
+    store.commit('setLogin', false)
     localStorage.clear()
     console.log(err)
+  }).finally(() => {
+    store.commit('setCheck', true)
   })
+} else {
+  store.commit('setCheck', true)
 }
 
 new Vue({

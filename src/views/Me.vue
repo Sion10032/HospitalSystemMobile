@@ -4,14 +4,14 @@
       <van-image width="80" height="80" round
         src="https://img.yzcdn.cn/vant/cat.jpeg"/>
       <div class="me-info">
-        <p class="me-name">{{ username }}</p>
+        <p class="me-name">{{ $store.state.user.username }}</p>
         <div class="divider"></div>
-        <p class="me-profile" >{{ profile }}</p>
+        <p class="me-profile" >{{ $store.state.user.profile.address }}</p>
       </div>
     </div>
     <van-cell-group>
-        <van-cell title="登录" to="login" v-if="!isLogin"/>
-        <van-cell title="退出登录" v-if="isLogin" @click="OnLogoutClick"/>
+        <van-cell title="登录" to="login" v-if="!$store.state.isLogin"/>
+        <van-cell title="退出登录" v-if="$store.state.isLogin" @click="OnLogoutClick"/>
     </van-cell-group>
   </div>
 </template>
@@ -23,26 +23,6 @@ export default {
       username: 'username',
       profile: 'profile',
       isLogin: false
-    }
-  },
-  created: function () {
-    if (localStorage.getItem('access')) {
-      this.isLogin = true
-      this.$axios({
-        method: 'GET',
-        url: '/auth/user/',
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('access')
-        }
-      }).then((result) => {
-        if (result.status === 200) {
-          this.username = result.data.username
-          this.profile = result.data.profile.address
-        }
-      }).catch((err) => {
-        console.log(err)
-        alert('获取用户数据失败')
-      })
     }
   },
   methods: {
@@ -61,6 +41,7 @@ export default {
           this.username = 'username'
           this.profile = 'profile'
           this.$router.push('/me')
+          this.$store.commit('setLogin', false)
         }
       }).catch((err) => {
         console.log(err)

@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-if="$store.state.isCheck">
     <router-view/>
     <van-tabbar route>
       <van-tabbar-item replace to="/" icon="home-o">
