@@ -15,7 +15,7 @@
       <van-cell title="预约时间段" :value="BookingTimes"/>
       <van-cell title="预约科室" :value="Lab" clickable/>
       <van-cell title="医生" v-if="Doctor" :value="Doctor.Name" clickable/>
-      <van-cell title="缴费金额" :value="Fee" clickable/>
+      <van-cell title="缴费金额" :value="Fee" :label="IsPaid ? '已缴费' : '未缴费'" clickable @click="OnFeeClick"/>
     </van-cell-group>
   </div>
 </template>
@@ -35,6 +35,8 @@ export default {
         Name: 'Doctor'
       },
       Fee: 100,
+      FeeInfo: null,
+      IsPaid: false,
       ShowControl: {
         QRCode: false
       },
@@ -61,7 +63,12 @@ export default {
           Name: this.$store.getters.getDoctor(result.data.doctor)
         }
       }
-      this.Fee = result.data.is_expert ? 100 : 20
+      this.FeeInfo = result.data.pay
+      this.Fee = 0
+      for (let it of this.FeeInfo.items) {
+        this.Fee += it.price
+      }
+      this.IsPaid = result.data.is_paid
     })
   },
   methods: {
@@ -70,6 +77,9 @@ export default {
     },
     ShowControlSwitch: function (item, value = null) {
       this.ShowControl[item] = value !== null ? value : !this.ShowControl[item]
+    },
+    OnFeeClick: function () {
+      this.$router.push({ name: 'fee', params: { id: this.FeeInfo.id.toString() } })
     }
   }
 }

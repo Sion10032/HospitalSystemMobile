@@ -9,7 +9,7 @@ import {
   Image, Grid, GridItem, Tab, Tabs,
   Search, Panel, Button, NavBar,
   Step, Steps, Lazyload, Field, Popup,
-  Picker, DatetimePicker
+  Picker, DatetimePicker, Tag, Divider
 } from 'vant'
 
 Vue.use(VueAxios, axios)
@@ -18,7 +18,7 @@ Vue.use(Tabbar).use(TabbarItem).use(Cell).use(CellGroup)
   .use(Image).use(Grid).use(GridItem).use(Tab).use(Tabs)
   .use(Search).use(Panel).use(Button).use(NavBar)
   .use(Step).use(Steps).use(Lazyload).use(Field).use(Popup)
-  .use(Picker).use(DatetimePicker)
+  .use(Picker).use(DatetimePicker).use(Tag).use(Divider)
 
 Vue.config.productionTip = false
 

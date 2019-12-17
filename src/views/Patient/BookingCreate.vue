@@ -201,6 +201,8 @@ export default {
         data: data
       }).then((result) => {
         alert('预约成功')
+        console.log(result)
+        this.$router.replace({ name: 'fee', params: { id: result.data.pay.id } })
       }).catch((err) => {
         console.log(err)
         alert('预约失败')

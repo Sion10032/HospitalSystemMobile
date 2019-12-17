@@ -58,6 +58,7 @@ export default {
       for (let it of res.data) {
         let re = {
           id: it.id,
+          is_paid: it.is_paid,
           lab: this.$store.getters.getLab(it.department),
           date: it.date,
           time: this.$store.getters.getTime(it.time)

@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <van-search placeholder="请输入搜索关键词" v-model="value" />
+    <van-search placeholder="请输入搜索关键词" v-model="searchValue" />
     <van-grid>
       <van-grid-item icon="photo-o" text="新建预约" to="bookingcreate"/>
       <van-grid-item icon="photo-o" text="预约信息" to="bookings"/>
@@ -30,6 +30,7 @@ export default {
   },
   data: function () {
     return {
+      searchValue: '',
       bookings: []
     }
   },
@@ -45,6 +46,7 @@ export default {
         }
         let re = {
           id: it.id,
+          is_paid: it.is_paid,
           lab: this.$store.getters.getLab(it.department),
           date: it.date,
           time: this.$store.getters.getTime(it.time)

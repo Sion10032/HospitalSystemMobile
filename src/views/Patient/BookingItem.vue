@@ -1,6 +1,11 @@
 <template>
-  <div class="booking-item-wrapper" @click="GoBookingDetail">
-    <van-cell :title="booking.lab" :value='booking.date' :label="booking.doctor" clickable/>
+  <div v-if="booking" class="booking-item-wrapper" @click="GoBookingDetail">
+    <van-cell :value='booking.date' :label="booking.is_paid ? '已缴费' : '未缴费'" clickable>
+      <template slot="title">
+        <span class="custom-title">{{ booking.lab }} </span>
+        <van-tag type="primary" v-if="booking.doctor">{{ booking.doctor }}</van-tag>
+      </template>
+    </van-cell>
   </div>
 </template>
 
@@ -10,6 +15,7 @@ export default {
     booking: {
       id: Number,
       lab: String,
+      is_paid: Boolean,
       date: String,
       doctor: String,
       time: String
@@ -17,15 +23,17 @@ export default {
   },
   methods: {
     GoBookingDetail: function () {
-      this.$router.push({ name: 'booking', params: { id: this.booking.id } })
+      this.$router.push({ name: 'booking', params: { id: this.booking.id.toString() } })
     }
   }
 }
 </script>
 
 <style scoped>
+.booking-item-wrapper {
+}
 p {
   font-size: 14px;
-  margin-left: 6px;
+  margin: 6px;
 }
 </style>>
