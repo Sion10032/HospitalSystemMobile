@@ -11,6 +11,7 @@
       <van-popup class="qrcode-img-wrapper" v-model="ShowControl.QRCode" position="bottom">
         <van-image width="320" height="320" fit="cover"
           src="https://img.yzcdn.cn/vant/cat.jpeg"/>
+          {{ $store.state.user.id + ',,,,' + this.id }}
       </van-popup>
       <van-cell title="预约时间段" :value="BookingTimes"/>
       <van-cell title="预约科室" :value="Lab" clickable/>
@@ -91,5 +92,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 </style>

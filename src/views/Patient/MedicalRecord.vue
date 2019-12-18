@@ -28,7 +28,8 @@ export default {
       lab: '科室',
       onset_date: '',
       doctor: '',
-      detail: 'aaa',
+      detail: '',
+      diagnosis: '',
       resp: null
     }
   },

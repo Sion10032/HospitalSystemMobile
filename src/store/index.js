@@ -17,7 +17,8 @@ export default new Vuex.Store({
     isCheck: false,
     department: [],
     bookingTimes: [],
-    doctors: {}
+    doctors: {},
+    medicineHandout: []
   },
   getters: {
     getLab: function (state) {
@@ -44,6 +45,18 @@ export default new Vuex.Store({
           for (let it of state.doctors[k]) {
             if (it.id === id) {
               return it.profile.name
+            }
+          }
+        }
+      }
+    },
+    // 返回药物发放id
+    getMedicineHandout: function (state) {
+      return function (id) {
+        for (let k in state.medicineHandout) {
+          for (let it of state.medicineHandout[k]) {
+            if (it.prescription.patient === id) {
+              return it.id
             }
           }
         }
