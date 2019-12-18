@@ -12,7 +12,7 @@
         :key="item.id"
         :booking="item"/>
     </van-panel>
-    <van-panel v-if="this.rawMedicineHandout" title="待领药品" style="overflow: hidden;">
+    <van-panel v-if="this.rawMedicineHandout" title="处方单" style="overflow: hidden;">
       <van-cell
         v-for="mh in medicineHandouts"
         :key="mh.id"

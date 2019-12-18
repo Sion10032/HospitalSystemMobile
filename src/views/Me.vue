@@ -6,11 +6,14 @@
       <div class="me-info">
         <p class="me-name">{{ $store.state.user.username }}</p>
         <div class="divider"></div>
-        <p class="me-profile" >{{ $store.state.user.profile.address }}</p>
+        <p class="me-profile" >{{ $store.state.user.email }}</p>
       </div>
     </div>
     <van-cell-group>
         <van-cell title="登录" to="login" v-if="!$store.state.isLogin"/>
+        <van-cell title="姓名" v-if="$store.state.isLogin">{{ $store.state.user.profile.name }}</van-cell>
+        <van-cell title="性别" v-if="$store.state.isLogin">{{ $store.state.user.profile.gender === 1 ? '男' : '女' }}</van-cell>
+        <van-cell title="电话号码" v-if="$store.state.isLogin">{{ $store.state.user.profile.phone }}</van-cell>
         <van-cell title="退出登录" v-if="$store.state.isLogin" @click="OnLogoutClick"/>
     </van-cell-group>
   </div>

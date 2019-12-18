@@ -11,6 +11,7 @@
       <van-cell title="缴费金额" :value="pay"/>
       <van-cell title="是否缴费" :value="is_paid"/>
       <van-cell title="医生" :value="doctor"/>
+      <!-- <van-cell title="药品清单"  :value="items"/> -->
       <van-steps :active="active">
         <van-step>待配药</van-step>
         <van-step>配药中</van-step>
@@ -44,13 +45,12 @@ export default {
   created: function () {
     this.$axios({
       method: 'get',
-      url: '/medicine-handout-records/' + this.id
+      url: '/medicine-handout-records/' + this.id + '/'
     }).then((result) => {
       this.create_time = result.data.create_time.substring(0, 10) + ' ' + result.data.create_time.substring(11, 19)
       this.pay = result.data.prescription.pay
       this.is_paid = result.data.prescription.is_paid ? '是' : '否'
       this.doctor = this.$store.getters.getDoctor(result.data.creator)
-      console.log(this.doctor)
       this.active = result.data.handout_status
     })
   },
