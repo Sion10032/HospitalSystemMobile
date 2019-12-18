@@ -1,8 +1,8 @@
 <template>
-  <div v-if="medicalrecord" class="medical-record-item-wrapper" @click="GoMedicalRecordDetail">
+  <div v-if="record" class="medical-record-item-wrapper" @click="GoMedicalRecordDetail">
     <van-cell :value="record.time" clickable>
       <template slot="title">
-        <span class="custom-title">{{ medicalrecord.time }} </span>
+        <span class="custom-title">{{ record.lab }} </span>
       </template>
     </van-cell>
   </div>
@@ -10,6 +10,13 @@
 
 <script>
 export default {
+  props: {
+    record: {
+      id: Number,
+      lab: String,
+      time: String
+    }
+  },
   methods: {
     GoMedicalRecordDetail: function () {
       this.$router.push({ name: 'medicalrecord', params: { id: this.record.id.toString() } })

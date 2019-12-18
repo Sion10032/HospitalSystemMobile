@@ -33,6 +33,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "booking" */ '../views/Patient/Booking.vue')
   },
   {
+    path: '/medicalrecords/:id',
+    name: 'medicalrecord',
+    props: true,
+    component: () => import(/* webpackChunkName: "booking" */ '../views/Patient/MedicalRecord.vue')
+  },
+  {
     path: '/bookingcreate',
     name: 'bookingcreate',
     component: () => import(/* webpackChunkName: "bookingcreate" */ '../views/Patient/BookingCreate.vue')

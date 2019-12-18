@@ -6,7 +6,7 @@
       left-arrow
       @click-left="onClickLeft"
     />
-    <div class="medical-records-wrapper">e
+    <div class="medical-records-wrapper">
       <medical-record-item
         v-for="item in records"
         :key="item.id"
@@ -44,11 +44,11 @@ export default {
       method: 'get',
       url: '/users/' + this.$store.state.user.id + '/medical-records/'
     }).then((res) => {
-      console.log(res)
       for (let it of res.data) {
         let re = {
           id: it.id,
-          time: it.time
+          time: it.time.substring(0, 10),
+          lab: this.$store.getters.getLab(it.department)
         }
         this.records.push(re)
       }

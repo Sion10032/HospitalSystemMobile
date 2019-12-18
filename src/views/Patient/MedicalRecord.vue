@@ -7,9 +7,12 @@
       @click-left="onClickLeft"
     />
     <van-cell-group>
-      <van-cell title="就诊日期" :value="Date"/>
-      <van-cell title="就诊科室" :value="Lab"/>
-      <van-cell title="医生" v-if="Doctor" :value="Doctor.Name"/>
+      <van-cell title="就诊日期" :value="date"/>
+      <van-cell title="就诊科室" :value="lab"/>
+      <van-cell title="发病日期" :value="onset_date"/>
+      <van-cell title="就诊医生" :value="doctor"/>
+      <van-cell title="病情描述" :value="detail"/>
+      <van-cell title="诊断结果" :value="diagnosis"/>
     </van-cell-group>
   </div>
 </template>
@@ -21,12 +24,11 @@ export default {
   },
   data: function () {
     return {
-      Date: '',
-      Lab: '科室',
-      Doctor: {
-        Id: 0,
-        Name: 'Doctor'
-      },
+      date: '',
+      lab: '科室',
+      onset_date: '',
+      doctor: '',
+      detail: 'aaa',
       resp: null
     }
   },
@@ -42,14 +44,12 @@ export default {
       url: '/medical-records/' + this.id
     }).then((result) => {
       this.resp = result.data
-      this.Date = result.data.time
-      this.Lab = this.$store.getters.getLab(result.data.department)
-      if (result.data.is_expert) {
-        this.Doctor = {
-          Id: result.data.doctor,
-          Name: this.$store.getters.getDoctor(result.data.doctor)
-        }
-      }
+      this.date = result.data.time.substring(0, 10)
+      this.lab = this.$store.getters.getLab(result.data.department)
+      this.onset_date = result.data.onset_date
+      this.doctor = this.$store.getters.getDoctor(result.data.creator)
+      this.detail = result.data.detail
+      this.diagnosis = result.data.diagnosis
     })
   },
   methods: {
