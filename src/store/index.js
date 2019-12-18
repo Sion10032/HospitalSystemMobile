@@ -18,7 +18,7 @@ export default new Vuex.Store({
     department: [],
     bookingTimes: [],
     doctors: {},
-    medicineHandout: []
+    handoutStatus: ['待配药', '配药中', '待发药', '发药中', '发药完成']
   },
   getters: {
     getLab: function (state) {
@@ -45,18 +45,6 @@ export default new Vuex.Store({
           for (let it of state.doctors[k]) {
             if (it.id === id) {
               return it.profile.name
-            }
-          }
-        }
-      }
-    },
-    // 返回药物发放id
-    getMedicineHandout: function (state) {
-      return function (id) {
-        for (let k in state.medicineHandout) {
-          for (let it of state.medicineHandout[k]) {
-            if (it.prescription.patient === id) {
-              return it.id
             }
           }
         }

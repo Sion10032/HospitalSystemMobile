@@ -12,7 +12,15 @@
         :key="item.id"
         :booking="item"/>
     </van-panel>
-    <van-panel title="待领药品" style="overflow: hidden;">
+    <van-panel v-if="this.rawMedicineHandout" title="待领药品" style="overflow: hidden;">
+      <van-cell
+        v-for="mh in medicineHandouts"
+        :key="mh.id"
+        :title="'领药单' + mh.id"
+        :value='$store.state.handoutStatus[mh.handout_status]'
+        @click="goHandoutDetail(mh.id)"
+        clickable>
+      </van-cell>
     </van-panel>
     <van-panel title="排队情况" style="overflow: hidden;">
     </van-panel>
@@ -30,7 +38,21 @@ export default {
   data: function () {
     return {
       searchValue: '',
-      bookings: []
+      bookings: [],
+      active: 0,
+      rawMedicineHandout: null
+    }
+  },
+  computed: {
+    medicineHandouts: function () {
+      let res = []
+      for (let it of this.rawMedicineHandout) {
+        console.log()
+        if (it.prescription.patient === this.$store.state.user.id && it.handout_status < 4) {
+          res.push(it)
+        }
+      }
+      return res
     }
   },
   created: function () {
@@ -56,6 +78,18 @@ export default {
         this.bookings.push(re)
       }
     })
+    this.$axios({
+      method: 'get',
+      url: '/medicine-handout-records/'
+    }).then((res) => {
+      this.rawMedicineHandout = res.data
+      console.log(this.medicineHandouts)
+    })
+  },
+  methods: {
+    goHandoutDetail: function (mhId) {
+      this.$router.push({ name: 'handoutdetail', params: { id: mhId } })
+    }
   }
 }
 </script>
