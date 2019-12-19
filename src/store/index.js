@@ -59,6 +59,15 @@ export default new Vuex.Store({
           }
         }
       }
+    },
+    getMedicinePrice: function (state) {
+      return function (id) {
+        for (let it of state.medicines) {
+          if (it.id === id) {
+            return it.price
+          }
+        }
+      }
     }
   },
   mutations: {

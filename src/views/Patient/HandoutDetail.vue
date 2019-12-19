@@ -14,10 +14,9 @@
       <van-cell
         v-for="item in items"
         :key="item.id">
-        <div>here{{ $store.getters.getMedicine(item.id) }}</div>
-        <!-- <div>{{ item.count }}</div> -->
+        <div>{{ $store.getters.getMedicine(item.id) }}</div>
+        <!-- <div>￥{{ $store.getters.getMedicinePrice(item.id) }}</div> -->
       </van-cell>
-      <!-- <van-cell title="药品清单"  :value="items"/> -->
       <van-steps :active="active">
         <van-step>待配药</van-step>
         <van-step>配药中</van-step>
@@ -60,7 +59,9 @@ export default {
       this.is_paid = result.data.prescription.is_paid ? '是' : '否'
       this.doctor = this.$store.getters.getDoctor(result.data.creator)
       this.active = result.data.handout_status
-      this.item = result.data.prescription.items
+      this.items = result.data.prescription.items
+      console.log(this.$store.getters.getMedicine(this.items[0].id))
+      console.log(this.items[0].id)
     })
   },
   methods: {
