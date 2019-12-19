@@ -26,7 +26,9 @@ Vue.config.productionTip = false
 
 axios.defaults.baseURL = 'http://47.106.164.144:8000/api/'
 Vue.prototype.$axios = axios
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access')
+if (localStorage.getItem('access')) {
+  axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access')
+}
 
 axios.all([
   axios({ methods: 'get', url: '/departments/' }),
