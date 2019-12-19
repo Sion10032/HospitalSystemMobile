@@ -3,8 +3,10 @@
     <van-nav-bar
       title="预约详情"
       left-text="返回"
+      right-text="取消预约"
       left-arrow
       @click-left="onClickLeft"
+      @click-right="onClickRight"
     />
     <van-cell-group>
       <van-cell title="预约ID" :value="id" label="点击显示二维码" clickable @click="ShowControlSwitch('QRCode')"/>
@@ -75,6 +77,18 @@ export default {
   methods: {
     onClickLeft: function () {
       this.$router.go(-1)
+    },
+    onClickRight: function () {
+      this.$axios({
+        method: 'put',
+        url: '/reservations/' + this.id + '/',
+        data: {
+          is_cancel: true
+        }
+      }).then((res) => {
+        alert('已取消')
+        this.$router.go(-1)
+      })
     },
     ShowControlSwitch: function (item, value = null) {
       this.ShowControl[item] = value !== null ? value : !this.ShowControl[item]

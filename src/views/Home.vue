@@ -6,12 +6,6 @@
       <van-grid-item icon="photo-o" text="预约信息" to="bookings"/>
       <van-grid-item icon="photo-o" text="病历查看" to="madicalrecords"/>
     </van-grid>
-    <van-panel title="当前预约" style="overflow: hidden;">
-      <booking-item
-        v-for="item in bookings"
-        :key="item.id"
-        :booking="item"/>
-    </van-panel>
     <van-panel v-if="this.rawMedicineHandout" title="处方单" style="overflow: hidden;">
       <van-cell
         v-for="mh in medicineHandouts"
@@ -28,17 +22,12 @@
 </template>
 
 <script>
-import BookingItem from './Patient/BookingItem.vue'
 
 export default {
   name: 'home',
-  components: {
-    BookingItem
-  },
   data: function () {
     return {
       searchValue: '',
-      bookings: [],
       active: 0,
       rawMedicineHandout: null
     }
@@ -67,28 +56,6 @@ export default {
     })
   },
   created: function () {
-    this.bookings = []
-    this.$axios({
-      method: 'get',
-      url: '/users/' + this.$store.state.user.id + '/reservations/'
-    }).then((res) => {
-      for (let it of res.data) {
-        if (it.is_finish) {
-          continue
-        }
-        let re = {
-          id: it.id,
-          is_paid: it.is_paid,
-          lab: this.$store.getters.getLab(it.department),
-          date: it.date,
-          time: this.$store.getters.getTime(it.time)
-        }
-        if (it.is_expert) {
-          re.doctor = this.$store.getters.getDoctor(it.doctor)
-        }
-        this.bookings.push(re)
-      }
-    })
     this.$axios({
       method: 'get',
       url: '/medicine-handout-records/'

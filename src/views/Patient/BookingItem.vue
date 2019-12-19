@@ -1,6 +1,6 @@
 <template>
-  <div v-if="booking" class="booking-item-wrapper" @click="GoBookingDetail">
-    <van-cell :value='booking.date' :label="booking.is_paid ? '已缴费' : '未缴费'" clickable>
+  <div v-if="!booking.is_cancel" class="booking-item-wrapper" @click="GoBookingDetail">
+    <van-cell :value='booking.date' :label="booking.is_paid ? '已缴费' : '未缴费'"  clickable>
       <template slot="title">
         <span class="custom-title">{{ booking.lab }} </span>
         <van-tag type="primary" v-if="booking.doctor">{{ booking.doctor }}</van-tag>
@@ -16,6 +16,7 @@ export default {
       id: Number,
       lab: String,
       is_paid: Boolean,
+      is_cancel: Boolean,
       date: String,
       doctor: String,
       time: String

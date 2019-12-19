@@ -59,6 +59,7 @@ export default {
         let re = {
           id: it.id,
           is_paid: it.is_paid,
+          is_cancel: it.is_cancel,
           lab: this.$store.getters.getLab(it.department),
           date: it.date,
           time: this.$store.getters.getTime(it.time)
