@@ -17,6 +17,7 @@ export default new Vuex.Store({
     isCheck: false,
     department: [],
     bookingTimes: [],
+    medicines: [],
     doctors: {},
     handoutStatus: ['待配药', '配药中', '待发药', '发药中', '发药完成']
   },
@@ -49,6 +50,15 @@ export default new Vuex.Store({
           }
         }
       }
+    },
+    getMedicine: function (state) {
+      return function (id) {
+        for (let it of state.medicines) {
+          if (it.id === id) {
+            return it.name
+          }
+        }
+      }
     }
   },
   mutations: {
@@ -67,6 +77,12 @@ export default new Vuex.Store({
     setDepartment: function (state, department) {
       for (let it of department) {
         state.department.push(it)
+      }
+    },
+    setMedicines: function (state, medicines) {
+      state.medicines.splice(0, state.medicines.length)
+      for (let it of medicines) {
+        state.medicines.push(it)
       }
     },
     setBookingTimes: function (state, bookingTimes) {

@@ -55,6 +55,17 @@ export default {
       return res
     }
   },
+  beforeCreate: function () {
+    this.$axios({
+      method: 'get',
+      url: '/medicine/',
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('access')
+      }
+    }).then((res) => {
+      this.$store.commit('setMedicines', res.data)
+    })
+  },
   created: function () {
     this.bookings = []
     this.$axios({

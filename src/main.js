@@ -30,7 +30,7 @@ Vue.prototype.$axios = axios
 axios.all([
   axios({ methods: 'get', url: '/departments/' }),
   axios({ methods: 'get', url: '/reservation-time/' })
-]).then(axios.spread((department, bookingTimes) => {
+]).then(axios.spread((department, bookingTimes, medicine) => {
   store.commit('setDepartment', department.data)
   store.commit('setBookingTimes', bookingTimes.data)
 })).then(async () => {
