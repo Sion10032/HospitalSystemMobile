@@ -31,8 +31,6 @@ export default {
 </script>
 
 <style scoped>
-.booking-item-wrapper {
-}
 p {
   font-size: 14px;
   margin: 6px;
