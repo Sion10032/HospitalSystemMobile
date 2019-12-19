@@ -36,7 +36,7 @@ axios.all([
   store.commit('setDepartment', department.data)
   store.commit('setBookingTimes', bookingTimes.data)
   store.commit('setMedicines', medicine.data)
-})).then(async () => {
+})).catch(() => {}).then(async () => {
   if (localStorage.getItem('refresh')) {
     await axios({
       method: 'post',
@@ -54,7 +54,7 @@ axios.all([
       console.log(err)
     })
   }
-}).then(async () => {
+}).catch(() => {}).then(async () => {
   if (localStorage.getItem('access')) {
     // 刷新用户信息
     await axios({
@@ -65,7 +65,7 @@ axios.all([
       store.commit('setLogin', true)
     })
   }
-}).then(async () => {
+}).catch(() => {}).then(async () => {
   let urls = []
   for (let it of store.state.department) {
     urls.push(axios({
