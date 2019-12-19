@@ -64,11 +64,9 @@ export default {
           receive: this.totalFee
         }
       }).then((res) => {
-        if (res.status === 200) {
-          this.feeInfo.receive = this.totalFee
-          alert('缴费成功')
-          this.$router.go(-1)
-        }
+        this.feeInfo.receive = this.totalFee
+        alert('缴费成功')
+        this.$router.go(-1)
       })
     }
   }

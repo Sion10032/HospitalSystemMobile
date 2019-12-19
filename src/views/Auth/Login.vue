@@ -41,23 +41,19 @@ export default {
           password: this.password
         }
       }).then((result) => {
-        if (result.status === 200) {
-          localStorage.setItem('access', result.data.access)
-          localStorage.setItem('refresh', result.data.refresh)
-          this.$axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access')
-        }
+        localStorage.setItem('access', result.data.access)
+        localStorage.setItem('refresh', result.data.refresh)
+        this.$axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access')
       }).then(() => {
         this.$axios({
           method: 'get',
           url: '/auth/user/'
         }).then((res) => {
-          if (res.status === 200) {
-            this.$store.commit('setUser', res.data)
-            this.$store.commit('setLogin', true)
-            alert('登陆成功')
-            this.$router.push('/me')
-            location.reload()
-          }
+          this.$store.commit('setUser', res.data)
+          this.$store.commit('setLogin', true)
+          alert('登陆成功')
+          this.$router.push('/me')
+          location.reload()
         })
       }).catch((err) => {
         console.log(err)

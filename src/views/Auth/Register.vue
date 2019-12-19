@@ -111,10 +111,8 @@ export default {
           }
         }
       }).then((result) => {
-        if (result.status === 200) {
-          alert('注册成功')
-          this.$router.push('/login')
-        }
+        alert('注册成功')
+        this.$router.push('/login')
       }).catch((err) => {
         console.log(err)
         alert('注册失败')

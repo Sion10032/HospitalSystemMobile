@@ -30,15 +30,13 @@ export default {
           Authorization: 'Bearer ' + localStorage.getItem('access')
         }
       }).then((result) => {
-        if (result.status === 200) {
-          this.isLogin = false
-          localStorage.clear()
-          this.$store.commit('setUser', {
-            id: '请登录', email: '', username: '', profile: {}
-          })
-          this.$store.commit('setLogin', false)
-          this.$router.push('/me')
-        }
+        this.isLogin = false
+        localStorage.clear()
+        this.$store.commit('setUser', {
+          id: '请登录', email: '', username: '', profile: {}
+        })
+        this.$store.commit('setLogin', false)
+        this.$router.push('/me')
       }).catch((err) => {
         console.log(err)
         alert('失败')
