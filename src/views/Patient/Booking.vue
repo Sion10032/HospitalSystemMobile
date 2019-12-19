@@ -17,7 +17,7 @@
       </van-popup>
       <van-cell title="预约时间段" :value="BookingTimes"/>
       <van-cell title="预约科室" :value="Lab" clickable/>
-      <van-cell title="医生" v-if="Doctor" :value="Doctor.Name" clickable/>
+      <van-cell title="医生" :value="Doctor.Name" clickable/>
       <van-cell title="缴费金额" :value="Fee" :label="IsPaid ? '已缴费' : '未缴费'" clickable @click="OnFeeClick"/>
     </van-cell-group>
   </div>
@@ -35,7 +35,7 @@ export default {
       Lab: '科室',
       Doctor: {
         Id: 0,
-        Name: 'Doctor'
+        Name: '未指定'
       },
       Fee: 100,
       FeeInfo: null,
@@ -86,7 +86,11 @@ export default {
           is_cancel: true
         }
       }).then((res) => {
-        alert('已取消')
+        if (this.IsPaid) {
+          alert('预约已取消，退款将原路返回')
+        } else {
+          alert('预约已取消')
+        }
         this.$router.go(-1)
       })
     },

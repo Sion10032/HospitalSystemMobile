@@ -2,11 +2,11 @@
   <div class="home">
     <van-search placeholder="请输入搜索关键词" v-model="searchValue" />
     <van-grid  :column-num="3">
-      <van-grid-item icon="photo-o" text="新建预约" to="bookingcreate"/>
-      <van-grid-item icon="photo-o" text="预约信息" to="bookings"/>
-      <van-grid-item icon="photo-o" text="病历查看" to="madicalrecords"/>
+      <van-grid-item icon="edit" text="新建预约" to="bookingcreate"/>
+      <van-grid-item icon="todo-list-o" text="预约信息" to="bookings"/>
+      <van-grid-item icon="notes-o" text="病历查看" to="madicalrecords"/>
     </van-grid>
-    <van-panel v-if="this.rawMedicineHandout" title="处方单" style="overflow: hidden;">
+    <van-panel v-if="this.rawMedicineHandout" title="领药单" style="overflow: hidden;">
       <van-cell
         v-for="mh in medicineHandouts"
         :key="mh.id"
@@ -15,8 +15,6 @@
         @click="goHandoutDetail(mh.id)"
         clickable>
       </van-cell>
-    </van-panel>
-    <van-panel title="排队情况" style="overflow: hidden;">
     </van-panel>
   </div>
 </template>
@@ -36,24 +34,12 @@ export default {
     medicineHandouts: function () {
       let res = []
       for (let it of this.rawMedicineHandout) {
-        console.log()
-        if (it.prescription.patient === this.$store.state.user.id && it.handout_status < 4) {
+        if (it.prescription.patient === this.$store.state.user.id) {
           res.push(it)
         }
       }
       return res
     }
-  },
-  beforeCreate: function () {
-    this.$axios({
-      method: 'get',
-      url: '/medicine/',
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('access')
-      }
-    }).then((res) => {
-      this.$store.commit('setMedicines', res.data)
-    })
   },
   created: function () {
     this.$axios({

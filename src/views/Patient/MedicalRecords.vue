@@ -7,7 +7,7 @@
       @click-left="onClickLeft"
     />
     <div class="records-wrapper">
-      <case_record-item
+      <medical-record-item
         v-for="item in case_records"
         :key="item.id"
         :case="item" />

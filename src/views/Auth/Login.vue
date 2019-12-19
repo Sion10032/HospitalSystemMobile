@@ -56,6 +56,7 @@ export default {
             this.$store.commit('setLogin', true)
             alert('登陆成功')
             this.$router.push('/me')
+            location.reload()
           }
         })
       }).catch((err) => {
